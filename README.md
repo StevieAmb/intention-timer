@@ -8,7 +8,7 @@ We created an application that allows the user to set goals for their health and
 
 The app will log that activity to keep track of how the user has been spending their time.
 
-View the final project [here](https://devonwigle.github.io/intention-timer/)!
+View the final project [here](https://stevieamb.github.io/intention-timer/)!
 
 ## Set-up Instructions
 
