@@ -1,4 +1,3 @@
-var activityPresenter = document.querySelector('.activity-presenter');
 var activityTitle = document.getElementById('newActivity');
 var categoryBox = document.getElementById('categoryBox');
 //images
@@ -28,7 +27,6 @@ var circle = document.querySelector('.circle');
 //aside
 var pastActivitiesText = document.querySelector('.past-activities-paragraphs');
 var pastActivitiesBox = document.querySelector('.empty-box');
-var pastActivityLog = document.querySelector('#activityLog');
 //errors
 var categoryError = document.querySelector('.category');
 var accomplishError = document.querySelector('.accomplish');
@@ -38,55 +36,28 @@ var secondsError = document.querySelector('.seconds');
 var currentActivity = {};
 var savedActivities = [];
 
-//event listeners
-startTimerButton.addEventListener('click', beginTimer);
-startActivityButton.addEventListener('click', startActivity);
-studyButton.addEventListener('click', highlightCategoryStudy);
-meditateButton.addEventListener('click', highlightCategoryMeditate);
-exerciseButton.addEventListener('click', highlightCategoryExercise);
-createNewActivityButton.addEventListener('click', displayHomePage);
-logActivityButton.addEventListener('click', function(event) {
-  addClass(pastActivitiesText, 'hidden');
-  removeClass(pastActivitiesBox, 'hidden')
-  displayLoggedActivity();
-  displayCreateNewButton();
-});
-userMinutesInput.addEventListener('keydown', function(event) {
-  if(keyErrors.includes(event.key)) {
-    event.preventDefault();
-  }
-});
-userSecondsInput.addEventListener('keydown', function(event) {
-  if(keyErrors.includes(event.key)) {
-    event.preventDefault();
-  }
-});
-categoryBox.addEventListener('click', function (event) {
-  checkCategory(event, meditateIds, 'Meditate');
-  checkCategory(event, exerciseIds, 'Exercise');
-  checkCategory(event, studyIds, 'Study');
-});
+
 
 //functions
-function displayLoggedActivity() {
+const displayLoggedActivity = () => {
   completeActivity();
   pastActivitiesBox.innerHTML = '';
-  for (var i = 0; i < savedActivities.length; i++) {
+  savedActivities.forEach(savedActivity => {
     pastActivitiesBox.innerHTML += `
     <section class="past-activities-box">
       <section class="past-activities">
-        <p class="category-header">${savedActivities[i].category}</p>
-        <p class="logged-timer">${savedActivities[i].minutes} MIN ${savedActivities[i].seconds} SECONDS</p>
-        <p class="activity-description">${savedActivities[i].description}</p>
+        <p class="category-header">${savedActivity.category}</p>
+        <p class="logged-timer">${savedActivity.minutes} MIN ${savedActivity.seconds} SECONDS</p>
+        <p class="activity-description">${savedActivity.description}</p>
       </section>
       <section class="category-color-box">
-        <div class="category-color-bar ${savedActivities[i].color}"></div>
+        <div class="category-color-bar ${savedActivity.color}"></div>
       </section>
     </section>`;
-  };
+  });
 };
 
-function startActivity() {
+const startActivity = () => {
   if (selectedCategory !== '' && userAccomplishInput.value !== '' && userMinutesInput.value !== '' && userSecondsInput.value !== '') {
     createActivity();
     removeClassTimer();
@@ -96,13 +67,13 @@ function startActivity() {
   }
 };
 
-function refreshTimer() {
+const refreshTimer = () => {
   startTimerButton.disabled = false;
   startTimerButton.innerText = 'START';
   addClass(logActivityButton, 'visibility')
 };
 
-function changeColorBar() {
+const changeColorBar = () => {
   for (var i = 0; i < savedActivities.length; i++) {
     if (savedActivities[i].category === 'Study') {
       savedActivities[i].color = 'green-bar';
@@ -114,36 +85,36 @@ function changeColorBar() {
   };
 };
 
-function beginTimer() {
+const beginTimer = () => {
   currentActivity.startTimer(currentActivity.minutes, currentActivity.seconds);
   changeColorBar();
 };
 
-function removeClassErrorMessages() {
+const removeClassErrorMessages = () => {
   validateCategory();
   validateAccomplish();
   validateMinutes();
   validatedSeconds();
 };
 
-function validateCategory() {
+const validateCategory = () => {
   if (selectedCategory === '') {
     removeClass(categoryError, 'visibility');
   };
 };
 
-function unhighlightCategory(element, element2, rule, icon) {
+const unhighlightCategory = (element, element2, rule, icon) => {
   element2.src = `./assets/${icon}.svg`;
   element.classList.remove(rule);
 };
 
-function createActivity() {
+const createActivity = () => {
   var color = changeColorBar();
   currentActivity = new Activity(selectedCategory, userAccomplishInput.value, userMinutesInput.value, userSecondsInput.value, color);
   savedActivities.unshift(currentActivity);
 };
 
-function checkCategory(event, category, activity) {
+const checkCategory = (event, category, activity) => {
   for (var i = 0; i < category.length; i++) {
     if (category[i] === event.target.id) {
       selectedCategory = activity;
@@ -151,14 +122,14 @@ function checkCategory(event, category, activity) {
   };
 };
 
-function displayUserInput() {
+const displayUserInput = () => {
   currentActivity.minutes = currentActivity.minutes.toString().padStart(2, '0');
   currentActivity.seconds = currentActivity.seconds.toString().padStart(2, '0');
   timerDisplay.innerText = `${currentActivity.minutes}:${currentActivity.seconds}`;
   chosenActivityDisplay.innerText = `${currentActivity.description}`;
 };
 
-function changeCircleColor(element) {
+const changeCircleColor = (element) => {
   if (currentActivity.category === 'Study') {
     addClass(element, 'green');
   } else if (currentActivity.category === 'Meditate') {
@@ -168,25 +139,25 @@ function changeCircleColor(element) {
   };
 };
 
-function highlightCategoryStudy() {
+const highlightCategoryStudy = () => {
   highlightCategory(studyButton, studyImage, 'study-click', 'study');
   unhighlightCategory(meditateButton, meditateImage, 'meditate-click', 'meditate');
   unhighlightCategory(exerciseButton, exerciseImage, 'exercise-click', 'exercise');
 };
 
-function highlightCategoryMeditate() {
+const highlightCategoryMeditate = () => {
   highlightCategory(meditateButton, meditateImage, 'meditate-click', 'meditate');
   unhighlightCategory(studyButton, studyImage, 'study-click', 'study');
   unhighlightCategory(exerciseButton, exerciseImage, 'exercise-click', 'exercise');
 };
 
-function highlightCategoryExercise() {
+const highlightCategoryExercise = () => {
   highlightCategory(exerciseButton, exerciseImage, 'exercise-click', 'exercise');
   unhighlightCategory(meditateButton, meditateImage, 'meditate-click', 'meditate');
   unhighlightCategory(studyButton, studyImage, 'study-click', 'study');
 };
 
-function removeClassTimer() {
+const removeClassTimer = () => {
   removeClass(timerView, 'hidden');
   addClass(userActivityInputView, 'hidden');
   changeActivityTitle();
@@ -194,11 +165,11 @@ function removeClassTimer() {
   changeCircleColor(circle);
 };
 
-function changeActivityTitle() {
+const changeActivityTitle = () => {
   activityTitle.innerText = 'Current Activity';
 };
 
-function highlightCategory(element, element2, rule, icon) {
+const highlightCategory = (element, element2, rule, icon) => {
   if (element.classList.contains(rule)) {
     element2.src = `./assets/${icon}.svg`;
     element.classList.remove(rule);
@@ -208,25 +179,25 @@ function highlightCategory(element, element2, rule, icon) {
   };
 };
 
-function validateAccomplish() {
+const validateAccomplish = () => {
   if (userAccomplishInput.value === '') {
     removeClass(accomplishError, 'visibility');
   };
 };
 
-function validateMinutes() {
+const validateMinutes = () => {
   if (userMinutesInput.value === '') {
     removeClass(minutesError, 'visibility');
   };
 };
 
-function validatedSeconds() {
+const validatedSeconds = () => {
   if (userSecondsInput.value === '') {
     removeClass(secondsError, 'visibility');
   };
 };
 
-function displayHomePage() {
+const displayHomePage = () => {
   activityTitle.innerHTML = 'New Activity';
   clearInput();
   clearButton();
@@ -236,50 +207,80 @@ function displayHomePage() {
   removeClass(userActivityInputView, 'hidden');
 };
 
-function clearInput() {
+const clearInput = () => {
   selectedCategory = '';
   userSecondsInput.value = '';
   userAccomplishInput.value = '';
   userMinutesInput.value = '';
 };
 
-function clearButton() {
+const clearButton = () => {
   unhighlightCategory(meditateButton, meditateImage, 'meditate-click', 'meditate');
   unhighlightCategory(exerciseButton, exerciseImage, 'exercise-click', 'exercise');
   unhighlightCategory(studyButton, studyImage, 'study-click', 'study');
 };
 
-function clearCircle() {
+const clearCircle = () => {
   removeClass(circle, 'green');
   removeClass(circle, 'purple');
   removeClass(circle, 'red');
 };
 
-function clearErrorMessage() {
+const clearErrorMessage = () => {
   addClass(accomplishError, 'visibility');
   addClass(minutesError, 'visibility');
   addClass(secondsError, 'visibility');
 };
 
-function displayCreateNewButton() {
+const displayCreateNewButton = () => {
   activityTitle.innerText = 'Completed Activity';
   addClass(timerView, 'hidden');
   removeClass(createNewActivityView, 'hidden');
 };
 
-function completeActivity() {
+const completeActivity = () => {
   currentActivity.markComplete()
 };
 
-function disableButton(element) {
+const disableButton = (element) => {
   element.disabled = true;
   addClass(element, 'disabled');
 };
 
-function removeClass(element, rule) {
+const removeClass = (element, rule) => {
   element.classList.remove(rule);
 };
 
-function addClass(element, rule) {
+const addClass = (element, rule) => {
   element.classList.add(rule);
 };
+
+//event listeners
+startTimerButton.addEventListener('click', beginTimer);
+startActivityButton.addEventListener('click', startActivity);
+studyButton.addEventListener('click', highlightCategoryStudy);
+meditateButton.addEventListener('click', highlightCategoryMeditate);
+exerciseButton.addEventListener('click', highlightCategoryExercise);
+createNewActivityButton.addEventListener('click', displayHomePage);
+logActivityButton.addEventListener('click', (event) => {
+  addClass(pastActivitiesText, 'hidden');
+  removeClass(pastActivitiesBox, 'hidden')
+  displayLoggedActivity();
+  displayCreateNewButton();
+});
+userMinutesInput.addEventListener('keydown', (event) => {
+  if(keyErrors.includes(event.key)) {
+    event.preventDefault();
+  }
+});
+userSecondsInput.addEventListener('keydown', (event) => {
+  if(keyErrors.includes(event.key)) {
+    event.preventDefault();
+  }
+});
+categoryBox.addEventListener('click', (event) => {
+  checkCategory(event, meditateIds, 'Meditate');
+  checkCategory(event, exerciseIds, 'Exercise');
+  checkCategory(event, studyIds, 'Study');
+});
+
