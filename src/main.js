@@ -74,16 +74,21 @@ const refreshTimer = () => {
 };
 
 const changeColorBar = () => {
-  for (var i = 0; i < savedActivities.length; i++) {
-    if (savedActivities[i].category === 'Study') {
-      savedActivities[i].color = 'green-bar';
-    } else if (savedActivities[i].category === 'Meditate') {
-      savedActivities[i].color = 'purple-bar';
-    } else if (savedActivities[i].category === 'Exercise') {
-      savedActivities[i].color = 'red-bar';
+  savedActivities.forEach(savedActivity => {
+    switch (savedActivity.category) {
+      case 'Study':
+        savedActivity.color = 'green-bar';
+      break;
+      case 'Meditate':
+        savedActivity.color = 'purple-bar';
+      break;
+      case 'Exercise':
+        savedActivity.color = 'red-bar';
+      break;
     }
-  };
-};
+  });
+}
+
 
 const beginTimer = () => {
   currentActivity.startTimer(currentActivity.minutes, currentActivity.seconds);
@@ -115,11 +120,11 @@ const createActivity = () => {
 };
 
 const checkCategory = (event, category, activity) => {
-  for (var i = 0; i < category.length; i++) {
-    if (category[i] === event.target.id) {
+  category.forEach(category => {
+    if (category === event.target.id) {
       selectedCategory = activity;
     };
-  };
+  });
 };
 
 const displayUserInput = () => {
@@ -130,14 +135,19 @@ const displayUserInput = () => {
 };
 
 const changeCircleColor = (element) => {
-  if (currentActivity.category === 'Study') {
+  switch (currentActivity.category) {
+    case 'Study':
     addClass(element, 'green');
-  } else if (currentActivity.category === 'Meditate') {
+    break;
+    case 'Meditate':
     addClass(element, 'purple');
-  } else if (currentActivity.category === 'Exercise') {
+    break;
+    case 'Exercise':
     addClass(element, 'red');
-  };
-};
+    break;
+  }
+}
+
 
 const highlightCategoryStudy = () => {
   highlightCategory(studyButton, studyImage, 'study-click', 'study');
@@ -180,22 +190,28 @@ const highlightCategory = (element, element2, rule, icon) => {
 };
 
 const validateAccomplish = () => {
-  if (userAccomplishInput.value === '') {
-    removeClass(accomplishError, 'visibility');
-  };
-};
+  switch (userAccomplishInput.value) {
+    case '':
+      removeClass(accomplishError, 'visibility');
+    break;
+  }
+}
 
 const validateMinutes = () => {
-  if (userMinutesInput.value === '') {
-    removeClass(minutesError, 'visibility');
-  };
-};
+  switch (userMinutesInput.value) {
+    case '':
+      removeClass(minutesError, 'visibility');
+    break;
+  }
+}
 
 const validatedSeconds = () => {
-  if (userSecondsInput.value === '') {
-    removeClass(secondsError, 'visibility');
-  };
-};
+  switch (userSecondsInput.value) {
+    case '':
+      removeClass(secondsError, 'visibility');
+      break;
+  }
+}
 
 const displayHomePage = () => {
   activityTitle.innerHTML = 'New Activity';
